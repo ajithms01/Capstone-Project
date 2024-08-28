@@ -43,4 +43,13 @@ public class ClientService {
             throw new RuntimeException("Client not found");
         }
     }
+
+    public Optional<Client> getClientById(Long clientId) {
+        return clientRepository.findById(clientId);
+    }
+
+
+    public Client saveClient(Client client) {
+        return clientRepository.save(client);
+    }
 }

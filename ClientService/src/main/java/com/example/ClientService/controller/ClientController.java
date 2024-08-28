@@ -1,7 +1,9 @@
 package com.example.ClientService.controller;
 
 import com.example.ClientService.dtos.ClientLoginDto;
+import com.example.ClientService.feign.EventClient;
 import com.example.ClientService.model.Client;
+import com.example.ClientService.resources.Event;
 import com.example.ClientService.service.ClientService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -18,6 +20,9 @@ public class ClientController {
     @Autowired
     private ClientService clientService;
 
+    @Autowired
+    private EventClient eventClient;
+
     @PostMapping("/login")
     public ResponseEntity<String> login(@RequestBody ClientLoginDto clientLoginDto) {
         Optional<Client> client = clientService.login(clientLoginDto);
@@ -31,15 +36,30 @@ public class ClientController {
     }
 
     @GetMapping("/events")
-    public ResponseEntity<List<Client>> getAllEvents() {
-        List<Client> events = clientService.getAllEvents();
-        return ResponseEntity.ok(events);
+    public ResponseEntity<List<Event>> getAllEvents(@RequestParam Long clientId) {
+        Optional<Client> client = clientService.getClientById(clientId);
+        if (client.isPresent()) {
+            String hostName = client.get().getUserName();
+            List<Event> events = eventClient.getEventsByHostName(hostName);
+            return ResponseEntity.ok(events);
+        } else {
+            return ResponseEntity.status(404).body(null);
+        }
     }
 
+
     @PostMapping("/events")
-    public ResponseEntity<Client> createEvent(@RequestBody Client client) {
-        Client createdEvent = clientService.createEvent(client);
-        return ResponseEntity.status(201).body(createdEvent);
+    public ResponseEntity<Client> createEvent(@RequestBody Event event, @RequestParam Long clientId) {
+        Optional<Client> clientOptional = clientService.getClientById(clientId);
+        if (clientOptional.isPresent()) {
+            Event createdEvent = eventClient.createEvent(event);
+            Client client = clientOptional.get();
+            client.getEventId().add(createdEvent.getId()); // Add the new event ID to the client's list
+            clientService.saveClient(client); // Update the client with the new event ID
+            return ResponseEntity.status(201).body(client);
+        } else {
+            return ResponseEntity.status(404).body(null);
+        }
     }
 
     @PutMapping("/profile")
