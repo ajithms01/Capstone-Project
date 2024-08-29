@@ -3,14 +3,17 @@ package com.example.Management.Controller;
 import com.example.Management.Model.Event;
 import com.example.Management.Service.EventService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.sql.Date;
+import java.time.LocalDate;
 import java.util.List;
-import java.util.Optional;
 
+@CrossOrigin(origins = "http://localhost:3000")
 @RestController
-@RequestMapping("/event")
+@RequestMapping("/api/event")
 public class EventController {
     @Autowired
     private EventService eventService;
@@ -33,5 +36,20 @@ public class EventController {
     public ResponseEntity<Void> deleteEvent(@PathVariable Long id) {
         eventService.deleteEvent(id);
         return ResponseEntity.noContent().build();
+    }
+
+    @PostMapping
+    public ResponseEntity<Event> createEvent(@RequestBody Event event) {
+        return ResponseEntity.ok().body(eventService.createEvent(event));
+    }
+
+    @GetMapping("/eventType")
+    public ResponseEntity<List<Event>> getEventsByType(@RequestParam String eventType) {
+        return ResponseEntity.ok().body(eventService.getEventsByType(eventType));
+    }
+
+    @GetMapping("/eventDate")
+    public ResponseEntity<List<Event>> getEventsByDate(@RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date) {
+        return ResponseEntity.ok().body(eventService.getEventsByDate(date));
     }
 }
