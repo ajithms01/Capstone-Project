@@ -52,4 +52,8 @@ public class ClientService {
     public Client saveClient(Client client) {
         return clientRepository.save(client);
     }
+
+    public Optional<Client> getClientByUsername(String username) {
+        return clientRepository.findByUserName(username);
+    }
 }

@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -19,9 +20,9 @@ public class EventService {
         return eventRepository.findAll();
     }
 
-    public Event getEventByHostName(String hostName) {
+    public List<Event> getEventByHostName(String hostName) {
         Optional<Event> eventOptional= eventRepository.findByHost(hostName);
-        return eventOptional.orElse(null);
+        return Collections.singletonList(eventOptional.orElse(null));
     }
 
     public Event getEventById(Long id) {

@@ -6,7 +6,6 @@ import com.example.ClientService.model.Client;
 import com.example.ClientService.resources.Event;
 import com.example.ClientService.service.ClientService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -37,10 +36,12 @@ public class ClientController {
 
     @GetMapping("/events")
     public ResponseEntity<List<Event>> getAllEvents(@RequestParam Long clientId) {
-        Optional<Client> client = clientService.getClientById(clientId);
+
+        // Fetch client using username
+        Optional<Client> client = clientService.getClientById(clientId); // Assuming you have this method
         if (client.isPresent()) {
             String hostName = client.get().getUserName();
-            List<Event> events = eventClient.getEventsByHostName(hostName);
+            List<Event> events = eventClient.getEventByHostName(hostName).getBody();
             return ResponseEntity.ok(events);
         } else {
             return ResponseEntity.status(404).body(null);
@@ -52,7 +53,7 @@ public class ClientController {
     public ResponseEntity<Client> createEvent(@RequestBody Event event, @RequestParam Long clientId) {
         Optional<Client> clientOptional = clientService.getClientById(clientId);
         if (clientOptional.isPresent()) {
-            Event createdEvent = eventClient.createEvent(event);
+            Event createdEvent = eventClient.createEvent(event).getBody();
             Client client = clientOptional.get();
             client.getEventId().add(createdEvent.getId()); // Add the new event ID to the client's list
             clientService.saveClient(client); // Update the client with the new event ID
@@ -66,5 +67,16 @@ public class ClientController {
     public ResponseEntity<Client> updateProfile(@RequestParam Long clientId, @RequestBody Client updatedClient) {
         Client updatedProfile = clientService.updateProfile(clientId, updatedClient);
         return ResponseEntity.ok(updatedProfile);
+    }
+
+
+    @GetMapping("/getUser/{clientId}")
+    public ResponseEntity<Optional<Client>> getClient(@RequestParam Long clientId){
+        return ResponseEntity.ok().body(clientService.getClientById(clientId));
+    }
+
+    @PostMapping("addUser")
+    public ResponseEntity<Client> addClient(@RequestBody Client client){
+        return ResponseEntity.ok().body(clientService.saveClient(client));
     }
 }

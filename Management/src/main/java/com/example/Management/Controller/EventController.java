@@ -23,7 +23,7 @@ public class EventController {
     }
 
     @GetMapping("/host")
-    public ResponseEntity<Event> getEventByHostName(@RequestParam String hostName) {
+    public ResponseEntity<List<Event>> getEventByHostName(@RequestParam String hostName) {
         return ResponseEntity.ok().body(eventService.getEventByHostName(hostName));
     }
 
