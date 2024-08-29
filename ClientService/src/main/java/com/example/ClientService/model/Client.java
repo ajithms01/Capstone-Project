@@ -13,6 +13,7 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 public class Client {
+
     @Id
     private Long id;
     private String userName;
