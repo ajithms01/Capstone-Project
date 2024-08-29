@@ -2,7 +2,9 @@ package com.example.ClientService.utils;
 
 import com.example.ClientService.dtos.VendorRegistrationDto;
 import com.example.ClientService.model.Vendor;
+import org.springframework.stereotype.Component;
 
+@Component
 public class AppUtils {
     public Vendor mapToVendor(VendorRegistrationDto vendorRegistrationDto){
         if(vendorRegistrationDto==null){
