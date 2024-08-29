@@ -4,11 +4,13 @@ import com.example.Management.Model.Event;
 import com.example.Management.Model.EventStatus;
 import com.example.Management.Repository.EventRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
+@Service
 public class EventService {
     @Autowired
     private EventRepository eventRepository;
@@ -43,5 +45,17 @@ public class EventService {
         else{
             return null;
         }
+    }
+
+    public Event createEvent(Event event) {
+        return eventRepository.save(event);
+    }
+
+    public List<Event> getEventsByType(String eventType) {
+        return eventRepository.findAllByType(eventType);
+    }
+
+    public List<Event> getEventsByDate(LocalDate eventDate) {
+        return eventRepository.findAllByDate(eventDate);
     }
 }

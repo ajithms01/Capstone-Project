@@ -1,15 +1,13 @@
 package com.example.Management.Model;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.format.annotation.DateTimeFormat;
 
-import java.util.Date;
+import java.sql.Date;
 import java.util.List;
 
 @Entity
@@ -22,10 +20,14 @@ public class Event {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String name;
+//    @DateTimeFormat(pattern = "dd-mm-yyyy")
     private Date date;
     private String type;
     private String host;
+    @Transient
     private List<Guest> guestList;
     private Boolean paymentStatus;
+
+    @Enumerated(EnumType.STRING)
     private EventStatus status;
 }
