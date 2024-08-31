@@ -46,7 +46,7 @@ public class AuthenticationController {
     }
 
     @GetMapping("/validateId")
-    public Boolean validateId(@RequestParam("id") String id) {
+    public Boolean validateId(@RequestParam("id") Long id) {
         return service.validateId(id);
     }
 }

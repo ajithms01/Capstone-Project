@@ -11,7 +11,7 @@ import java.util.List;
 
 public class CustomUserDetails implements UserDetails {
 
-    private String id;
+    private Long id;
     private String username;
     private String password;
     private List<GrantedAuthority> authorities = new ArrayList<>();
@@ -59,7 +59,7 @@ public class CustomUserDetails implements UserDetails {
     }
 
     // Getter for id
-    public String getId() {
+    public Long getId() {
         return id;
     }
 

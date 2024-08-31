@@ -1,4 +1,4 @@
-package com.example.AuthenticationService.service;
+package com.example.GatewayEvent.util;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
@@ -14,15 +14,14 @@ import java.util.Map;
 import java.util.function.Function;
 
 @Component
-public class JwtService {
-
+public class JwtUtil {
     public static final String SECRET = "5367566B59703373367639792F423F4528482B4D6251655468576D5A71347437";
 
     public void validateToken(final String token) {
         Jwts.parserBuilder().setSigningKey(getSignKey()).build().parseClaimsJws(token);
     }
 
-    public String generateToken(String userName, Long userId, String role) {
+    public String generateToken(String userName, String userId, String role) {
         Map<String, Object> claims = new HashMap<>();
         claims.put("userId", userId);
         claims.put("role", role);

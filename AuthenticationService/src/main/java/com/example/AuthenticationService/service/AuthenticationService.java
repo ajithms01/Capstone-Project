@@ -30,7 +30,7 @@ public class AuthenticationService{
 
     }
 
-    public String generateToken(String username , String userId ,String role) {
+    public String generateToken(String username , Long userId ,String role) {
         return jwtService.generateToken(username,userId,role);
     }
 
@@ -39,7 +39,7 @@ public class AuthenticationService{
     }
 
 
-    public Boolean validateId(String id) {
+    public Boolean validateId(Long id) {
         return repository.existsById(id);
     }
 }
