@@ -17,8 +17,8 @@ public class AppUtils {
                     vendorRegistrationDto.getVendorLocation(),
                     vendorRegistrationDto.getType(),
                     vendorRegistrationDto.getProvides(),
-                    null,
-                    null);
+                    null
+            );
         }
     }
 }

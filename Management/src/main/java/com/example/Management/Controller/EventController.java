@@ -1,5 +1,6 @@
 package com.example.Management.Controller;
 
+import com.example.Management.Client.FullResponse;
 import com.example.Management.Model.Event;
 import com.example.Management.Service.EventService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -52,4 +53,20 @@ public class EventController {
     public ResponseEntity<List<Event>> getEventsByDate(@RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date) {
         return ResponseEntity.ok().body(eventService.getEventsByDate(date));
     }
+
+    @PutMapping("addGuest")
+    public ResponseEntity<Event> addGuestToEvent(@RequestParam Long eventId, @RequestParam List guest) {
+        return ResponseEntity.ok().body(eventService.addGuestToEvent(eventId, guest));
+    }
+
+    @GetMapping("/{eventId}")
+    public ResponseEntity<FullResponse> eventDetails(@RequestParam Long eventId){
+        return ResponseEntity.ok().body(eventService.eventDetails(eventId));
+    }
+
+    @GetMapping("/{eventId}/{vendorId}")
+    public ResponseEntity<FullResponse> sendOrder(@RequestParam Long eventId, @RequestParam Long vendorId){
+        return ResponseEntity.ok().body(eventService.sendOrder(eventId, vendorId));
+    }
+
 }

@@ -1,34 +1,33 @@
-package com.example.Management.Model;
+package com.example.Management.Client;
 
-import jakarta.persistence.*;
+import com.example.Management.Model.EventStatus;
+import com.example.Management.Model.Guest;
+import jakarta.persistence.Transient;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.springframework.format.annotation.DateTimeFormat;
 
 import java.sql.Date;
 import java.util.List;
-
-@Entity
+@Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-@Data
-public class Event {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+public class FullResponse {
     private Long id;
     private String name;
     private Date date;
     private String type;
     private String host;
-    private List<Long> vendorIds;
-    private Long venueId;
-    @Transient
     private List<Guest> guestList;
     private Boolean paymentStatus;
-    @Enumerated(EnumType.STRING)
     private EventStatus status;
-
+    private List<Long> vendorIds;
+    private List<Vendor> vendorList;
+    private Long venueId;
+    private String venue;
+    private String address;
+    private Float budget;
+    private String orderId;
 }

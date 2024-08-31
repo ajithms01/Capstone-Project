@@ -1,12 +1,10 @@
 package com.example.ClientService.feign;
 
 import com.example.ClientService.resources.Event;
+import com.example.ClientService.resources.Guest;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -18,5 +16,8 @@ public interface EventClient {
 
     @PostMapping
     public ResponseEntity<Event> createEvent(@RequestBody Event event);
+
+    @PutMapping("addGuest")
+    public ResponseEntity<Event> addGuestToEvent(@RequestParam Long eventId, @RequestParam List<Guest> guest);
 
 }
