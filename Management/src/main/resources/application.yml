@@ -5,10 +5,10 @@ spring:
   application:
     name: managementservice
   datasource:
-    url: jdbc:mysql://localhost:3306/event
-    username: root
-    password: pass@word1
-    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:postgresql://localhost:5432/event
+    username: postgres
+    password: postgres
+    driver-class-name: org.postgresql.Driver
 
   jpa:
     hibernate:
