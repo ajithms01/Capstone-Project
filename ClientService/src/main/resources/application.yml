@@ -1,14 +1,19 @@
 server:
-  port: 8083
+  port: 8082
 
 spring:
   application:
     name: client
+#  datasource:
+#    url: jdbc:postgresql://localhost:5432/event
+#    username: postgres
+#    password: postgres
+#    driver-class-name: org.postgresql.Driver
   datasource:
-    url: jdbc:postgresql://localhost:5432/event
-    username: postgres
-    password: postgres
-    driver-class-name: org.postgresql.Driver
+    url: jdbc:mysql://localhost:3306/event
+    username: root
+    password: pass@word1
+    driver-class-name: com.mysql.cj.jdbc.Driver
 
   jpa:
     hibernate:

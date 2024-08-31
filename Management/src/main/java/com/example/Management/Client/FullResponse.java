@@ -10,6 +10,8 @@ import lombok.NoArgsConstructor;
 
 import java.sql.Date;
 import java.util.List;
+import java.util.Map;
+
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -30,4 +32,6 @@ public class FullResponse {
     private String address;
     private Float budget;
     private String orderId;
+    private Map<String,Float> vendorMap;
+    private Float rate;
 }

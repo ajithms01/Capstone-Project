@@ -28,7 +28,7 @@ public class ClientService {
     private ClientRepository clientRepository;
 
     public Optional<Client> login(ClientLoginDto clientLoginDto) {
-        return clientRepository.findByUsernameAndPassword(
+        return clientRepository.findByUserNameAndPassword(
                 clientLoginDto.getUserName(),
                 clientLoginDto.getPassword()
         );

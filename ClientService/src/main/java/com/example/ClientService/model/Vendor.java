@@ -24,6 +24,7 @@ public class Vendor {
     private String vendorLocation;
     private String type;
     private List<String> provides;
+    private Float rate;
     @ElementCollection
     private List<Date> bookedDates;
 

@@ -14,14 +14,11 @@ public class OrderNumberGenerator {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddHHmmss");
         String timestamp = sdf.format(new Date());
 
-        // Increment the counter
-
-        // Generate a random 4-digit number
         Random random = new Random();
         int randomNumber = 1000 + random.nextInt(9000);
 
         // Combine timestamp, counter, and random number to create the order number
-        return "ORD-" + timestamp + "-" + eventId + "-" + randomNumber;
+        return "ORD-"+timestamp+"-000"+eventId +"-"+randomNumber;
     }
 
 }
