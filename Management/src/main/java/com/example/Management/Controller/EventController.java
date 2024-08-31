@@ -18,52 +18,63 @@ import java.util.List;
 public class EventController {
     @Autowired
     private EventService eventService;
+
+//    Display the list of events.
     @GetMapping
     public ResponseEntity<List<Event>> getAllEvents() {
         return ResponseEntity.ok().body(eventService.getAllEvents());
     }
 
+//    Display list of events hosted by a client
     @GetMapping("/host")
     public ResponseEntity<List<Event>> getEventByHostName(@RequestParam String hostName) {
         return ResponseEntity.ok().body(eventService.getEventByHostName(hostName));
     }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<Event> getEventById(Long id) {
-        return ResponseEntity.ok().body(eventService.getEventById(id));
-    }
+//    Display details of a particular event.
+//    @GetMapping("/{id}")
+//    public ResponseEntity<Event> getEventById(Long id) {
+//        return ResponseEntity.ok().body(eventService.getEventById(id));
+//    }
 
+//    Delete an event
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteEvent(@PathVariable Long id) {
         eventService.deleteEvent(id);
         return ResponseEntity.noContent().build();
     }
 
+//    Create an event
     @PostMapping
     public ResponseEntity<Event> createEvent(@RequestBody Event event) {
         return ResponseEntity.ok().body(eventService.createEvent(event));
     }
 
+//    Display events filtered by category
     @GetMapping("/eventType")
     public ResponseEntity<List<Event>> getEventsByType(@RequestParam String eventType) {
         return ResponseEntity.ok().body(eventService.getEventsByType(eventType));
     }
 
+//    Display events on a particular date
     @GetMapping("/eventDate")
     public ResponseEntity<List<Event>> getEventsByDate(@RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date) {
         return ResponseEntity.ok().body(eventService.getEventsByDate(date));
     }
 
+// Add guest to an event
     @PutMapping("addGuest")
     public ResponseEntity<Event> addGuestToEvent(@RequestParam Long eventId, @RequestParam List guest) {
         return ResponseEntity.ok().body(eventService.addGuestToEvent(eventId, guest));
     }
 
+//Display full details of an event
     @GetMapping("/{eventId}")
     public ResponseEntity<FullResponse> eventDetails(@RequestParam Long eventId){
         return ResponseEntity.ok().body(eventService.eventDetails(eventId));
     }
 
+//    Display details of an event with information of a particular vendor To send purchase order
     @GetMapping("/{eventId}/{vendorId}")
     public ResponseEntity<FullResponse> sendOrder(@RequestParam Long eventId, @RequestParam Long vendorId){
         return ResponseEntity.ok().body(eventService.sendOrder(eventId, vendorId));

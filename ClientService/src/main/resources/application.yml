@@ -1,15 +1,30 @@
 
 server:
-  port: 8083
+  port: 8082
 
 spring:
   application:
+<<<<<<< HEAD
     name: ClientService
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
     url: jdbc:mysql://localhost:3306/testdb
     username: root
     password: pass@word1
+=======
+    name: client
+#  datasource:
+#    url: jdbc:postgresql://localhost:5432/event
+#    username: postgres
+#    password: postgres
+#    driver-class-name: org.postgresql.Driver
+  datasource:
+    url: jdbc:mysql://localhost:3306/event
+    username: root
+    password: pass@word1
+    driver-class-name: com.mysql.cj.jdbc.Driver
+
+>>>>>>> 25f0b976dbf84f4c117f3f6f06598f55f555d68c
   jpa:
     hibernate:
       ddl-auto: update

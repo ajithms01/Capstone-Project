@@ -2,19 +2,20 @@ package com.example.Management.Service;
 
 import com.example.Management.Client.FullResponse;
 import com.example.Management.Client.Vendor;
+import com.example.Management.Client.Venue;
 import com.example.Management.Feign.VendorClient;
+import com.example.Management.Feign.VenueClient;
 import com.example.Management.Model.Event;
 import com.example.Management.Model.EventStatus;
+import com.example.Management.Model.Order;
 import com.example.Management.Repository.EventRepository;
+import com.example.Management.Repository.OrderRepository;
 import com.example.Management.dto.EntityToDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @Service
 public class EventService {
@@ -27,8 +28,12 @@ public class EventService {
     @Autowired
     private VendorClient vendorClient;
 
-//    @Autowired
-//    private EntityToDto entityToDto;
+    @Autowired
+    private VenueClient venueClient;
+
+    @Autowired
+    private OrderRepository orderRepository;
+
 
     public List<Event> getAllEvents() {
         return eventRepository.findAll();
@@ -63,7 +68,14 @@ public class EventService {
     }
 
     public Event createEvent(Event event) {
-        return eventRepository.save(event);
+        Event event1 = eventRepository.save(event);
+        Order order = new Order();
+        order.setOrderId(ong.generateOrderNumber(event1.getId()));
+//        order.setEventName(event.getName());
+        order.setEventId(event.getId());
+//        order.setEventHost(event.getHost());
+        orderRepository.save(order);
+        return event1;
     }
 
     public List<Event> getEventsByType(String eventType) {
@@ -91,18 +103,26 @@ public class EventService {
         if(eventOptional.isPresent()){
             Event event=eventOptional.get();
             FullResponse response = EntityToDto.eventToResponse(event);
+            Float budget = (float) 0;
             if(event.getVendorIds()!=null){
-                List<Vendor> newVendorList = new ArrayList<>();
+//                List<Vendor> newVendorList = new ArrayList<>();
+                Map<String, Float> vendorMap = new HashMap<>();
                 for(Long vendorId: event.getVendorIds()){
                     Vendor vendor = vendorClient.getVendorById(vendorId).getBody();
-                    newVendorList.add(vendor);
+                    vendorMap.put(vendor.getVendorName(), vendor.getRate());
+//                    newVendorList.add(vendor);
+                    budget+= vendor.getRate();
                 }
-                response.setVendorList(newVendorList);
+                response.setVendorMap(vendorMap);
+//                response.setVendorList(newVendorList);
             }
-//            response.setAddress(event.getAddress());
-
-
-
+            response.setType(event.getType());
+            Venue venue = venueClient.getVenueById(event.getVenueId()).getBody();
+            response.setAddress(venue.getAddress());
+            response.setVenue(venue.getVenueName());
+            response.setOrderId(orderRepository.findByEventId(event.getId()).getOrderId());
+            budget+=venue.getRent();
+            response.setBudget(budget);
             response.setGuestList(event.getGuestList());
             return response;
         }
@@ -120,11 +140,12 @@ public class EventService {
             response.setName(event.getName());
             response.setHost(event.getHost());
             response.setDate(event.getDate());
-            response.setOrderId(ong.generateOrderNumber(eventId));
-            response.setVendorList(Collections.singletonList(vendor));
-//            response.setAddress(event.getAddress());
-//            response.setVenue(event.getLocation());
-            response.setGuestList(event.getGuestList());
+
+            response.setOrderId(orderRepository.findByEventId(event.getId()).getOrderId()+"- 000" +vendorId);
+            Venue venue = venueClient.getVenueById(event.getVenueId()).getBody();
+            response.setAddress(venue.getAddress());
+            response.setVenue(venue.getVenueName());
+            response.setRate(vendor.getRate());
             return response;
         }
         else{

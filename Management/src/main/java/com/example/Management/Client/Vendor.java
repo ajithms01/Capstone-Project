@@ -6,6 +6,7 @@ import lombok.NoArgsConstructor;
 
 import java.sql.Date;
 import java.util.List;
+import java.util.Map;
 
 @Data
 @NoArgsConstructor
@@ -17,6 +18,7 @@ public class Vendor {
     private String vendorPhone;
     private String vendorLocation;
     private String type;
+    private Float rate;
     private List<String> provides;
     private List<Date> bookedDates;
 }
