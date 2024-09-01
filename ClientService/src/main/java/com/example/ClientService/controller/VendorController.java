@@ -63,4 +63,9 @@ public class VendorController {
     public ResponseEntity<Vendor> getVendorById(@RequestParam Long vendorId){
         return ResponseEntity.ok(vendorService.getVendorById(vendorId));
     }
+
+    @PutMapping("/addDate")
+    public ResponseEntity<Vendor> addDate(@RequestParam Long vendorId,@RequestParam Date date){
+        return ResponseEntity.ok().body(vendorService.addDate(vendorId,date));
+    }
 }
