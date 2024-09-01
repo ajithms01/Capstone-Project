@@ -10,7 +10,7 @@ spring:
             - AuthenticationFilter
 
         - id: AuthenticationService
-          uri: lb://AuthenticationService
+          uri: http://localhost:8085
           predicates:
             - Path=/auth/**
         - id: ManagementService
