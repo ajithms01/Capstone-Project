@@ -1,4 +1,4 @@
 package com.example.ClientService.model;
-public enum EmployeeRoles {
+public enum UserRole {
     ADMIN, USER, MANAGER;
 }

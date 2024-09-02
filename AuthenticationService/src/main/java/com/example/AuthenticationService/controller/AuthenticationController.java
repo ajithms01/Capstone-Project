@@ -3,6 +3,7 @@ package com.example.AuthenticationService.controller;
 
 import com.example.AuthenticationService.config.CustomUserDetails;
 import com.example.AuthenticationService.dto.AuthRequest;
+import com.example.AuthenticationService.feign.ClientController;
 import com.example.AuthenticationService.model.UserCredential;
 import com.example.AuthenticationService.service.AuthenticationService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,12 +22,18 @@ public class AuthenticationController {
     @Autowired
     private AuthenticationManager authenticationManager;
 
+    @Autowired
+    private ClientController clientController;
+
     @PostMapping("/register")
     public String addNewUser(@RequestBody UserCredential user) {
 
 
         user = service.saveUser(user);
+        clientController.addClient(user);
         return service.generateToken(user.getUsername(),user.getId(),user.getRole().name());
+
+
     }
 
     @PostMapping("/login")

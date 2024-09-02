@@ -16,7 +16,7 @@ spring:
 #    password: postgres
 #    driver-class-name: org.postgresql.Driver
   datasource:
-    url: jdbc:mysql://localhost:3306/event
+    url: jdbc:mysql://localhost:3306/testdb #event
     username: root
     password: pass@word1
     driver-class-name: com.mysql.cj.jdbc.Driver

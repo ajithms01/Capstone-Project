@@ -27,21 +27,7 @@ public class ClientController {
     @Autowired
     private EventClient eventClient;
 
-//    @PostMapping("/login")
-//    public ResponseEntity<String> login(@RequestBody ClientLoginDto clientLoginDto) {
-//        Optional<Client> client = clientService.login(clientLoginDto);
-//        if (client.isPresent()) {
-//            // Generate a session ID (securely)
-//            String sessionId = UUID.randomUUID().toString();
-//
-//            // Store session data securely (e.g., in a database or session store)
-//            sessionStore.storeSession(sessionId, client.get());
-//
-//            return ResponseEntity.ok(sessionId);
-//        } else {
-//            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid credentials");
-//        }
-//    }
+
     @GetMapping("/profile")
     public ResponseEntity<Client> getClientProfile(@RequestParam String username, @RequestParam String password){
         return ResponseEntity.ok().body(clientService.getClientByUsernameAndPassword(username,password).orElse(null));
@@ -67,8 +53,7 @@ public class ClientController {
         Optional<Client> clientOptional = clientService.getClientById(clientId);
         if (clientOptional.isPresent()) {
             Event createdEvent = eventClient.createEvent(event).getBody();
-            Client client = clientOptional.get();
-            client.getEventId().add(createdEvent.getId()); // Add the new event ID to the client's list
+            Client client = clientOptional.get(); // Add the new event ID to the client's list
             clientService.saveClient(client); // Update the client with the new event ID
             return ResponseEntity.status(201).body(client);
         } else {
@@ -90,6 +75,9 @@ public class ClientController {
 
     @PostMapping("/addUser")
     public ResponseEntity<Client> addClient(@RequestBody Client client){
+        Client client1=new Client();
+        client1.setName(client.getName());
+
         return ResponseEntity.ok().body(clientService.saveClient(client));
     }
 

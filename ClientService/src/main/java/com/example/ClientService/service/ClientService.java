@@ -28,7 +28,7 @@ public class ClientService {
     private ClientRepository clientRepository;
 
     public Optional<Client> login(ClientLoginDto clientLoginDto) {
-        return clientRepository.findByUserNameAndPassword(
+        return clientRepository.findByUsernameAndPassword(
                 clientLoginDto.getUserName(),
                 clientLoginDto.getPassword()
         );
@@ -122,6 +122,6 @@ public class ClientService {
     }
 
     public Optional<Client> getClientByUsernameAndPassword(String username, String password) {
-        return clientRepository.findByUserNameAndPassword(username, password);
+        return clientRepository.findByUsernameAndPassword(username, password);
     }
 }
