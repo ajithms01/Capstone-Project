@@ -79,7 +79,7 @@ public class ClientController {
         return ResponseEntity.ok().body(clientService.getClientById(clientId));
     }
 
-    @PostMapping("addUser")
+    @PostMapping("/addUser")
     public ResponseEntity<Client> addClient(@RequestBody Client client){
         return ResponseEntity.ok().body(clientService.saveClient(client));
     }

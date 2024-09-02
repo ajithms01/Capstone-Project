@@ -3,7 +3,7 @@ spring:
     gateway:
       routes:
         - id: ClientService
-          uri: http://localhost:8083
+          uri: http://localhost:8082
           predicates:
             - Path=/client/**,/venue/**,/vendor/**
           filters:
@@ -13,8 +13,8 @@ spring:
           uri: http://localhost:8085
           predicates:
             - Path=/auth/**
-        - id: ManagementService
-          uri: http://localhost:8082
+        - id: Management
+          uri: http://localhost:9999
           predicates:
             - Path=/employee/**,/api/**
           filters:
