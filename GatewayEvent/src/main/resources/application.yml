@@ -13,6 +13,7 @@ spring:
           uri: http://localhost:8085
           predicates:
             - Path=/auth/**
+
         - id: Management
           uri: http://localhost:9999
           predicates:
@@ -20,6 +21,20 @@ spring:
           filters:
             - AuthenticationFilter
 
+      default-filters:
+        - DedupeResponseHeader=Access-Control-Allow-Credentials Access-Control-Allow-Origin
+
+      globalcors:
+        corsConfigurations:
+          '[/**]':
+            allowedOrigins: "http://localhost:3000,http://127.0.0.1:3001"
+            allowedHeaders: "*"
+            allowedMethods:
+              - GET
+              - POST
+              - DELETE
+              - PUT
+              - OPTIONS
 
   application:
     name: GatewayEvent
@@ -27,4 +42,4 @@ spring:
 eureka:
   client:
     service-url:
-      defaultZone : http://localhost:8761/eureka/
+      defaultZone: http://localhost:8761/eureka/

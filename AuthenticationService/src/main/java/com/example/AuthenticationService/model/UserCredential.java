@@ -20,7 +20,7 @@ public class UserCredential {
     @Column(unique = true)
     private String email;
     private String password;
-    private UserRole role;
+    private UserRole role=UserRole.USER;
 
 }
 

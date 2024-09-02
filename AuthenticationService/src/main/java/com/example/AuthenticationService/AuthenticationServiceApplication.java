@@ -5,6 +5,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
 import org.springframework.data.web.config.EnableSpringDataWebSupport;
 
+
 @EnableDiscoveryClient
 @SpringBootApplication
 public class AuthenticationServiceApplication {
