@@ -2,16 +2,14 @@ package com.example.ClientService.service;
 
 import com.example.ClientService.dtos.VendorRegistrationDto;
 import com.example.ClientService.model.Vendor;
-import com.example.ClientService.model.Venue;
 import com.example.ClientService.repository.VendorRepository;
-import com.example.ClientService.repository.VenueRepository;
 import com.example.ClientService.utils.AppUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.sql.Date;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class VendorService {
@@ -56,5 +54,11 @@ public class VendorService {
 
     public Vendor getVendorById(Long vendorId) {
         return vendorRepository.findById(vendorId).orElse(null);
+    }
+
+    public Vendor addDate(Long vendorId, Date date) {
+        Vendor vendor= vendorRepository.getById(vendorId);
+        vendor.getBookedDates().add(date);
+        return vendorRepository.save(vendor);
     }
 }

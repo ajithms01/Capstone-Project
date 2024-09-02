@@ -1,5 +1,6 @@
 package com.example.ClientService.service;
 
+import com.example.ClientService.model.Vendor;
 import com.example.ClientService.model.Venue;
 import com.example.ClientService.repository.VenueRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,5 +24,11 @@ public class VenueService {
 
     public Venue getVenueById(Long venueId) {
         return venueRepository.findById(venueId).orElse(null);
+    }
+
+    public Venue addDate(Long venueId, Date date) {
+        Venue venue= venueRepository.getById(venueId);
+        venue.getBookedDates().add(date);
+        return venueRepository.save(venue);
     }
 }

@@ -71,10 +71,12 @@ public class EventService {
         Event event1 = eventRepository.save(event);
         Order order = new Order();
         order.setOrderId(ong.generateOrderNumber(event1.getId()));
-//        order.setEventName(event.getName());
         order.setEventId(event.getId());
-//        order.setEventHost(event.getHost());
         orderRepository.save(order);
+        for(Long id : event1.getVendorIds()){
+            vendorClient.addDate(id,event.getDate());
+        }
+        venueClient.addDate(event.getVenueId(),event.getDate());
         return event1;
     }
 
