@@ -25,6 +25,7 @@ public class FullResponse {
     private List<Guest> guestList;
     private Boolean paymentStatus;
     private EventStatus status;
+    private Long userId;
     private List<Long> vendorIds;
     private List<Vendor> vendorList;
     private Long venueId;

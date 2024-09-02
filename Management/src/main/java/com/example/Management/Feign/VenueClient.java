@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import java.sql.Date;
 
-@FeignClient(name = "client", url = "http://localhost:8082/venue")
+@FeignClient(name = "ClientService", url = "http://localhost:8082/venue")
 public interface VenueClient {
 
     @GetMapping("/{venueId}")

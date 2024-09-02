@@ -16,7 +16,7 @@ import java.util.List;
 public class EventClientFallback implements EventClient {
 
     @Override
-    public ResponseEntity<List<Event>> getEventByHostName(@RequestParam String hostName){
+    public ResponseEntity<List<Event>> getEventsByClientId(@RequestParam Long userId){
         // Return default value or handle error appropriately
         return (ResponseEntity<List<Event>>) Collections.emptyList();
     }

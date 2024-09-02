@@ -16,6 +16,7 @@ import lombok.NoArgsConstructor;
 @Table(name = "orders")
 public class Order {
     @Id
-    private String orderId;
     private Long eventId;
+    private String orderId;
+
 }

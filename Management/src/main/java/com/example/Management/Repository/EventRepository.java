@@ -9,11 +9,12 @@ import java.util.List;
 import java.util.Optional;
 
 public interface EventRepository extends JpaRepository<Event,Long> {
-    Optional<Event> findByHost(String hostName);
 
     List<Event> findAllByType(String type);
 
     List<Event> findAllByDate(Date eventDate);
 
     List<Event> findAllByDate(LocalDate eventDate);
+
+    List<Event> findAllByUserId(Long userId);
 }

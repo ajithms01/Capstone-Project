@@ -2,6 +2,7 @@ package com.example.Management.Controller;
 
 import com.example.Management.Client.FullResponse;
 import com.example.Management.Model.Event;
+import com.example.Management.Model.Guest;
 import com.example.Management.Service.EventService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -25,17 +26,6 @@ public class EventController {
         return ResponseEntity.ok().body(eventService.getAllEvents());
     }
 
-//    Display list of events hosted by a client
-    @GetMapping("/host")
-    public ResponseEntity<List<Event>> getEventByHostName(@RequestParam String hostName) {
-        return ResponseEntity.ok().body(eventService.getEventByHostName(hostName));
-    }
-
-//    Display details of a particular event.
-//    @GetMapping("/{id}")
-//    public ResponseEntity<Event> getEventById(Long id) {
-//        return ResponseEntity.ok().body(eventService.getEventById(id));
-//    }
 
 //    Delete an event
     @DeleteMapping("/{id}")
@@ -65,7 +55,7 @@ public class EventController {
 
 // Add guest to an event
     @PutMapping("addGuest")
-    public ResponseEntity<Event> addGuestToEvent(@RequestParam Long eventId, @RequestParam List guest) {
+    public ResponseEntity<Event> addGuestToEvent(@RequestParam Long eventId, @RequestParam List<Guest> guest) {
         return ResponseEntity.ok().body(eventService.addGuestToEvent(eventId, guest));
     }
 
@@ -81,4 +71,8 @@ public class EventController {
         return ResponseEntity.ok().body(eventService.sendOrder(eventId, vendorId));
     }
 
+    @GetMapping("/clientId")
+    public ResponseEntity<List<Event>> getEventsByClientId(@RequestParam Long userId) {
+        return ResponseEntity.ok().body(eventService.getEventsByClientId(userId));
+    }
 }

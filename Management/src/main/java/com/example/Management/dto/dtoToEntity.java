@@ -13,7 +13,8 @@ public class dtoToEntity {
                 .name(response.getName())
                 .date(response.getDate())
                 .type(response.getType())
-                .host(response.getHost())
+//                .host(response.getHost())
+                .userId(response.getUserId())
                 .guestList(response.getGuestList())
                 .status(response.getStatus())
                 .build();

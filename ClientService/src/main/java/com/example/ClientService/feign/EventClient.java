@@ -11,8 +11,6 @@ import java.util.List;
 @FeignClient(name = "Management", url = "http://localhost:9999/api/event", fallback = EventClientFallback.class)
 public interface EventClient {
 
-    @GetMapping("/host")
-    public ResponseEntity<List<Event>> getEventByHostName(@RequestParam String hostName);
 
     @PostMapping
     public ResponseEntity<Event> createEvent(@RequestBody Event event);
@@ -20,4 +18,6 @@ public interface EventClient {
     @PutMapping("addGuest")
     public ResponseEntity<Event> addGuestToEvent(@RequestParam Long eventId, @RequestParam List<Guest> guest);
 
+    @GetMapping("/clientId")
+    public ResponseEntity<List<Event>> getEventsByClientId(@RequestParam Long userId);
 }

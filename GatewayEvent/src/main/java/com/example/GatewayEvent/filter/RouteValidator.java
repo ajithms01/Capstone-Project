@@ -15,14 +15,15 @@ public class RouteValidator {
             "/auth/login",
             "/eureka",
             "/swagger-ui",
-            "/client",
-            "/api/event"
+            "/user",
+            "/api/event",
+            "/user/getUser"
 
     );
 
     public Predicate<ServerHttpRequest> isSecured =
             request -> openApiEndpoints
                     .stream()
-                    .noneMatch(uri -> request.getURI().getPath().contains(uri));
+                    .noneMatch(uri -> request.getURI().getPath().startsWith(uri));
 
 }

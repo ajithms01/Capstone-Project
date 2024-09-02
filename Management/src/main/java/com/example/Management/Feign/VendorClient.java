@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import java.sql.Date;
 
-@FeignClient(name = "client", url = "http://localhost:8082/vendor", fallback = VendorClientFallback.class)
+@FeignClient(name = "ClientService", url = "http://localhost:8082/vendor", fallback = VendorClientFallback.class)
 public interface VendorClient {
 
     @GetMapping("/getVendor/{vendorId}")

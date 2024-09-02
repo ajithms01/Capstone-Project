@@ -1,16 +1,20 @@
 package com.example.Management.Service;
 
 import com.example.Management.Client.FullResponse;
+import com.example.Management.Client.User;
 import com.example.Management.Client.Vendor;
 import com.example.Management.Client.Venue;
+import com.example.Management.Feign.UserClient;
 import com.example.Management.Feign.VendorClient;
 import com.example.Management.Feign.VenueClient;
 import com.example.Management.Model.Event;
 import com.example.Management.Model.EventStatus;
+import com.example.Management.Model.Guest;
 import com.example.Management.Model.Order;
 import com.example.Management.Repository.EventRepository;
 import com.example.Management.Repository.OrderRepository;
 import com.example.Management.dto.EntityToDto;
+import feign.Client;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -34,6 +38,9 @@ public class EventService {
     @Autowired
     private OrderRepository orderRepository;
 
+    @Autowired
+    private UserClient userClient;
+
 //    @Autowired
 //    private  EmailSenderService senderService;
 
@@ -41,10 +48,6 @@ public class EventService {
         return eventRepository.findAll();
     }
 
-    public List<Event> getEventByHostName(String hostName) {
-        Optional<Event> eventOptional= eventRepository.findByHost(hostName);
-        return Collections.singletonList(eventOptional.orElse(null));
-    }
 
     public Event getEventById(Long id) {
         Optional<Event> eventOptional= eventRepository.findById(id);
@@ -90,7 +93,7 @@ public class EventService {
         return eventRepository.findAllByDate(eventDate);
     }
 
-    public Event addGuestToEvent(Long eventId, List guest) {
+    public Event addGuestToEvent(Long eventId, List<Guest> guest) {
         Optional<Event> eventOptional= eventRepository.findById(eventId);
         if(eventOptional.isPresent()){
             Event event=eventOptional.get();
@@ -109,22 +112,20 @@ public class EventService {
             FullResponse response = EntityToDto.eventToResponse(event);
             Float budget = (float) 0;
             if(event.getVendorIds()!=null){
-//                List<Vendor> newVendorList = new ArrayList<>();
                 Map<String, Float> vendorMap = new HashMap<>();
                 for(Long vendorId: event.getVendorIds()){
                     Vendor vendor = vendorClient.getVendorById(vendorId).getBody();
                     vendorMap.put(vendor.getVendorName(), vendor.getRate());
-//                    newVendorList.add(vendor);
                     budget+= vendor.getRate();
                 }
                 response.setVendorMap(vendorMap);
-//                response.setVendorList(newVendorList);
             }
             response.setType(event.getType());
+            response.setHost(userClient.getClient(event.getUserId()).getName());
             Venue venue = venueClient.getVenueById(event.getVenueId()).getBody();
             response.setAddress(venue.getAddress());
             response.setVenue(venue.getVenueName());
-            response.setOrderId(orderRepository.findByEventId(event.getId()).getOrderId());
+            response.setOrderId(orderRepository.findById(event.getId()).get().getOrderId());
             budget+=venue.getRent();
             response.setBudget(budget);
             response.setGuestList(event.getGuestList());
@@ -142,9 +143,10 @@ public class EventService {
             Vendor vendor = vendorClient.getVendorById(vendorId).getBody();
             FullResponse response=new FullResponse();
             response.setName(event.getName());
-            response.setHost(event.getHost());
+
+            response.setHost(userClient.getClient(event.getUserId()).getName());
             response.setDate(event.getDate());
-            response.setOrderId(orderRepository.findByEventId(event.getId()).getOrderId()+"- 000" +vendorId);
+            response.setOrderId(orderRepository.findById(event.getId()).get().getOrderId()+"-000" +vendorId);
             Venue venue = venueClient.getVenueById(event.getVenueId()).getBody();
             response.setAddress(venue.getAddress());
             response.setVenue(venue.getVenueName());
@@ -207,7 +209,7 @@ public class EventService {
             Venue venue = venueClient.getVenueById(event.getVenueId()).getBody();
             response.setAddress(venue.getAddress());
             response.setVenue(venue.getVenueName());
-            response.setOrderId(orderRepository.findByEventId(event.getId()).getOrderId());
+            response.setOrderId(orderRepository.findById(event.getId()).get().getOrderId());
             budget+=venue.getRent();
             response.setBudget(budget);
             response.setGuestList(event.getGuestList());
@@ -227,7 +229,7 @@ public class EventService {
         joiner.add("");
         joiner.add("Order Details:");
         joiner.add("--------------------");
-        joiner.add("Order ID:        " + orderRepository.findByEventId(event.getId()).getOrderId());
+        joiner.add("Order ID:        " + orderRepository.findById(event.getId()).get().getOrderId());
         joiner.add("Event Name:      " + event.getName());
         joiner.add("Host:            " + event.getHost());
         joiner.add("Date:            " + event.getDate());
@@ -246,5 +248,9 @@ public class EventService {
         joiner.add("--------------------");
         joiner.add("Estimated Budget:      ₹" + event.getBudget());
         return joiner;
+    }
+
+    public List<Event> getEventsByClientId(Long userId) {
+        return eventRepository.findAllByUserId(userId);
     }
 }
