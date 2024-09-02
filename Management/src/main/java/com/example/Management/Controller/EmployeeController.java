@@ -1,5 +1,6 @@
 package com.example.Management.Controller;
 
+import com.example.Management.Client.FullResponse;
 import com.example.Management.Model.Employee;
 import com.example.Management.Model.Event;
 import com.example.Management.Service.EmployeeService;
@@ -42,6 +43,11 @@ public class EmployeeController {
     @PutMapping("/approveVendor")
     public ResponseEntity<Employee> approveVendor(Long employeeId) {
         return ResponseEntity.ok().body(employeeService.approveVendor(employeeId));
+    }
+
+    @GetMapping("/invoice/{eventId}")
+    public ResponseEntity<FullResponse> sendOrder(@RequestParam Long eventId) {
+        return ResponseEntity.ok().body(eventService.sendInvoice(eventId));
     }
 
 

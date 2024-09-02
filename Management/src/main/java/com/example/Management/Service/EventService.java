@@ -34,6 +34,8 @@ public class EventService {
     @Autowired
     private OrderRepository orderRepository;
 
+    @Autowired
+    private  EmailSenderService senderService;
 
     public List<Event> getAllEvents() {
         return eventRepository.findAll();
@@ -142,16 +144,107 @@ public class EventService {
             response.setName(event.getName());
             response.setHost(event.getHost());
             response.setDate(event.getDate());
-
             response.setOrderId(orderRepository.findByEventId(event.getId()).getOrderId()+"- 000" +vendorId);
             Venue venue = venueClient.getVenueById(event.getVenueId()).getBody();
             response.setAddress(venue.getAddress());
             response.setVenue(venue.getVenueName());
             response.setRate(vendor.getRate());
+            StringJoiner joiner = getStringJoiner(response, vendor);
+            senderService.sendSimpleEmail("bharathhareesh2002@gmail.com","Purchase Order",joiner.toString());
             return response;
         }
         else{
             return null;
         }
+    }
+
+    private static StringJoiner getStringJoiner(FullResponse response, Vendor vendor) {
+        StringJoiner joiner = new StringJoiner("\n");
+        joiner.add("Purchase Order");
+        joiner.add("====================");
+        joiner.add("");
+        joiner.add("Order Details:");
+        joiner.add("--------------------");
+        joiner.add("Order ID:        " + response.getOrderId());
+        joiner.add("Event Name:      " + response.getName());
+        joiner.add("Vendor Name:    " + vendor.getVendorName());
+        joiner.add("Host:            " + response.getHost());
+        joiner.add("Date:            " + response.getDate());
+        joiner.add("");
+        joiner.add("Venue Information:");
+        joiner.add("--------------------");
+        joiner.add("Venue:           " + response.getVenue());
+        joiner.add("Address:         " + response.getAddress());
+        joiner.add("");
+        joiner.add("Vendor Details:");
+        joiner.add("--------------------");
+        joiner.add("Rate:            ₹" + response.getRate());
+        joiner.add("");
+        joiner.add("--------------------");
+        joiner.add("Events & Co.");
+        joiner.add("Manager");
+        joiner.add("");
+        joiner.add("Thank you for your business!");
+        return joiner;
+    }
+
+    public FullResponse sendInvoice(Long eventId) {
+        Optional<Event> eventOptional= eventRepository.findById(eventId);
+        if(eventOptional.isPresent()){
+            Event event=eventOptional.get();
+            FullResponse response = EntityToDto.eventToResponse(event);
+            Float budget = (float) 0;
+            if(event.getVendorIds()!=null){
+                Map<String, Float> vendorMap = new HashMap<>();
+                for(Long vendorId: event.getVendorIds()){
+                    Vendor vendor = vendorClient.getVendorById(vendorId).getBody();
+                    vendorMap.put(vendor.getVendorName(), vendor.getRate());
+                    budget+= vendor.getRate();
+                }
+                response.setVendorMap(vendorMap);
+            }
+            response.setType(event.getType());
+            Venue venue = venueClient.getVenueById(event.getVenueId()).getBody();
+            response.setAddress(venue.getAddress());
+            response.setVenue(venue.getVenueName());
+            response.setOrderId(orderRepository.findByEventId(event.getId()).getOrderId());
+            budget+=venue.getRent();
+            response.setBudget(budget);
+            response.setGuestList(event.getGuestList());
+            String message =getInvoice(response).toString();
+            senderService.sendSimpleEmail("bharathhareesh2002@gmail.com","Invoice",message);
+            return response;
+        }
+        else{
+            return null;
+        }
+    }
+
+    private StringJoiner getInvoice(FullResponse event) {
+        StringJoiner joiner = new StringJoiner("\n");
+        joiner.add("Invoice");
+        joiner.add("====================");
+        joiner.add("");
+        joiner.add("Order Details:");
+        joiner.add("--------------------");
+        joiner.add("Order ID:        " + orderRepository.findByEventId(event.getId()).getOrderId());
+        joiner.add("Event Name:      " + event.getName());
+        joiner.add("Host:            " + event.getHost());
+        joiner.add("Date:            " + event.getDate());
+        joiner.add("");
+        joiner.add("Venue Information:");
+        joiner.add("--------------------");
+        Venue venue =venueClient.getVenueById(event.getVenueId()).getBody();
+        joiner.add("Venue:           " + venue.getVenueName());
+        joiner.add("Address:         " + venue.getAddress());
+        joiner.add("");
+        joiner.add("Vendors");
+        joiner.add("--------------------");
+        for (String value : event.getVendorMap().keySet()) {
+            joiner.add(value); // Add each value to the joiner
+        }
+        joiner.add("--------------------");
+        joiner.add("Estimated Budget:      ₹" + event.getBudget());
+        return joiner;
     }
 }

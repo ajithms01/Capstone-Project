@@ -14,6 +14,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 @CrossOrigin(origins = "http://localhost:3000")
 @RestController
@@ -26,16 +27,24 @@ public class ClientController {
     @Autowired
     private EventClient eventClient;
 
-    @PostMapping("/login")
-    public ResponseEntity<String> login(@RequestBody ClientLoginDto clientLoginDto) {
-        Optional<Client> client = clientService.login(clientLoginDto);
-        if (client.isPresent()) {
-            // Generate token here
-            String token = "dummy-token"; // Replace with actual token generation logic
-            return ResponseEntity.ok(token);
-        } else {
-            return ResponseEntity.status(401).body("Unauthorized");
-        }
+//    @PostMapping("/login")
+//    public ResponseEntity<String> login(@RequestBody ClientLoginDto clientLoginDto) {
+//        Optional<Client> client = clientService.login(clientLoginDto);
+//        if (client.isPresent()) {
+//            // Generate a session ID (securely)
+//            String sessionId = UUID.randomUUID().toString();
+//
+//            // Store session data securely (e.g., in a database or session store)
+//            sessionStore.storeSession(sessionId, client.get());
+//
+//            return ResponseEntity.ok(sessionId);
+//        } else {
+//            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid credentials");
+//        }
+//    }
+    @GetMapping("/profile")
+    public ResponseEntity<Client> getClientProfile(@RequestParam String username, @RequestParam String password){
+        return ResponseEntity.ok().body(clientService.getClientByUsernameAndPassword(username,password).orElse(null));
     }
 
     @GetMapping("/events")
@@ -107,6 +116,9 @@ public class ClientController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error processing file: " + e.getMessage());
         }
     }
+
+
+
 
 
 

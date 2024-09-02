@@ -120,4 +120,8 @@ public class ClientService {
         }
         return guests;
     }
+
+    public Optional<Client> getClientByUsernameAndPassword(String username, String password) {
+        return clientRepository.findByUserNameAndPassword(username, password);
+    }
 }
