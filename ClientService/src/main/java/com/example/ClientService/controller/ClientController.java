@@ -105,7 +105,10 @@ public class ClientController {
         }
     }
 
-
+    @GetMapping("getUser")
+    public ResponseEntity<Client> getUserInfo(@RequestParam String username){
+        return ResponseEntity.ok().body(clientService.getUserInfo(username));
+    }
 
 
 

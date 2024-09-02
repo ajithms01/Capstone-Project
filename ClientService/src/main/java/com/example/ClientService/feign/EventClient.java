@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@FeignClient(name = "managementservice", url = "http://localhost:8081/api/event", fallback = EventClientFallback.class)
+@FeignClient(name = "Management", url = "http://localhost:9999/api/event", fallback = EventClientFallback.class)
 public interface EventClient {
 
     @GetMapping("/host")

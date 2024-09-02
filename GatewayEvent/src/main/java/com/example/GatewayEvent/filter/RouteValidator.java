@@ -14,7 +14,9 @@ public class RouteValidator {
             "/auth/register",
             "/auth/login",
             "/eureka",
-            "/swagger-ui"
+            "/swagger-ui",
+            "/client",
+            "/api/event"
 
     );
 

@@ -5,14 +5,12 @@ import com.example.ClientService.model.Client;
 import com.example.ClientService.repository.ClientRepository;
 import com.example.ClientService.resources.Guest;
 import com.opencsv.CSVReader;
-import io.micrometer.core.instrument.MultiGauge;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.stereotype.Service;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.InputStream;
@@ -123,5 +121,9 @@ public class ClientService {
 
     public Optional<Client> getClientByUsernameAndPassword(String username, String password) {
         return clientRepository.findByUsernameAndPassword(username, password);
+    }
+
+    public Client getUserInfo(String username) {
+        return clientRepository.findByUsername(username);
     }
 }
