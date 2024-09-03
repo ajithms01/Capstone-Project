@@ -16,7 +16,9 @@ public class Event {
     private String name;
     private Date date;
     private String type;
-    private String host;
+    private Long userId;
+    private List<Long> vendorIds;
+    private Long venueId;
     private List<Guest> guestList;
     private Boolean paymentStatus;
     private EventStatus status;

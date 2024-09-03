@@ -51,9 +51,9 @@ public class UserController {
         Optional<User> userOptional = userService.getClientById(userId);
         if (userOptional.isPresent()) {
             eventClient.createEvent(event);
-            User user = userOptional.get(); // Add the new event ID to the client's list
-            userService.saveClient(user); // Update the client with the new event ID
-            return ResponseEntity.status(201).body(user);
+//            User user = userOptional.get(); // Add the new event ID to the client's list
+//            userService.saveClient(user); // Update the client with the new event ID
+            return ResponseEntity.status(201).body(userOptional.get());
         } else {
             return ResponseEntity.status(404).body(null);
         }

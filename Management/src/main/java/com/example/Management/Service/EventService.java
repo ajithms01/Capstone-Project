@@ -78,10 +78,14 @@ public class EventService {
         order.setOrderId(ong.generateOrderNumber(event1.getId()));
         order.setEventId(event.getId());
         orderRepository.save(order);
-        for(Long id : event1.getVendorIds()){
-            vendorClient.addDate(id,event.getDate());
+        if(event1.getVendorIds() != null){
+            for(Long id : event1.getVendorIds()){
+                vendorClient.addDate(id,event.getDate());
+            }
         }
-        venueClient.addDate(event.getVenueId(),event.getDate());
+        if(event1.getVenueId() != null){
+            venueClient.addDate(event.getVenueId(),event.getDate());
+        }
         return event1;
     }
 
@@ -121,12 +125,14 @@ public class EventService {
                 response.setVendorMap(vendorMap);
             }
             response.setType(event.getType());
-            response.setHost(userClient.getClient(event.getUserId()).getName());
-            Venue venue = venueClient.getVenueById(event.getVenueId()).getBody();
-            response.setAddress(venue.getAddress());
-            response.setVenue(venue.getVenueName());
+            response.setHost(userClient.getClient(event.getUserId()).getBody().get().getName());
+            if(event.getVenueId() != null){
+                Venue venue = venueClient.getVenueById(event.getVenueId()).getBody();
+                response.setAddress(venue.getAddress());
+                response.setVenue(venue.getVenueName());
+                budget+=venue.getRent();
+            }
             response.setOrderId(orderRepository.findById(event.getId()).get().getOrderId());
-            budget+=venue.getRent();
             response.setBudget(budget);
             response.setGuestList(event.getGuestList());
             return response;
@@ -139,21 +145,26 @@ public class EventService {
     public FullResponse sendOrder(Long eventId, Long vendorId) {
         Optional<Event> eventOptional= eventRepository.findById(eventId);
         if(eventOptional.isPresent()){
-            Event event=eventOptional.get();
             Vendor vendor = vendorClient.getVendorById(vendorId).getBody();
-            FullResponse response=new FullResponse();
-            response.setName(event.getName());
+            if(vendor !=null){
+                Event event=eventOptional.get();
+                FullResponse response=new FullResponse();
+                response.setName(event.getName());
 
-            response.setHost(userClient.getClient(event.getUserId()).getName());
-            response.setDate(event.getDate());
-            response.setOrderId(orderRepository.findById(event.getId()).get().getOrderId()+"-000" +vendorId);
-            Venue venue = venueClient.getVenueById(event.getVenueId()).getBody();
-            response.setAddress(venue.getAddress());
-            response.setVenue(venue.getVenueName());
-            response.setRate(vendor.getRate());
-            StringJoiner joiner = getStringJoiner(response, vendor);
-//            senderService.sendSimpleEmail("bharathhareesh2002@gmail.com","Purchase Order",joiner.toString());
-            return response;
+                response.setHost(userClient.getClient(event.getUserId()).getBody().get().getName());
+                response.setDate(event.getDate());
+                response.setOrderId(orderRepository.findById(event.getId()).get().getOrderId()+"-000" +vendorId);
+                Venue venue = venueClient.getVenueById(event.getVenueId()).getBody();
+                response.setAddress(venue.getAddress());
+                response.setVenue(venue.getVenueName());
+                response.setRate(vendor.getRate());
+                StringJoiner joiner = getStringJoiner(response, vendor);
+//                senderService.sendSimpleEmail("bharathhareesh2002@gmail.com","Purchase Order",joiner.toString());
+                return response;
+            }
+        else{
+            return null;
+            }
         }
         else{
             return null;
