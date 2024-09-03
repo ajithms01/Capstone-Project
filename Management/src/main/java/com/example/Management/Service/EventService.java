@@ -41,8 +41,8 @@ public class EventService {
     @Autowired
     private UserClient userClient;
 
-//    @Autowired
-//    private  EmailSenderService senderService;
+    @Autowired
+    private  EmailSenderService senderService;
 
     public List<Event> getAllEvents() {
         return eventRepository.findAll();
@@ -159,7 +159,7 @@ public class EventService {
                 response.setVenue(venue.getVenueName());
                 response.setRate(vendor.getRate());
                 StringJoiner joiner = getStringJoiner(response, vendor);
-//                senderService.sendSimpleEmail("bharathhareesh2002@gmail.com","Purchase Order",joiner.toString());
+                senderService.sendSimpleEmail("bharathhareesh2002@gmail.com","Purchase Order",joiner.toString());
                 return response;
             }
         else{
@@ -225,7 +225,7 @@ public class EventService {
             response.setBudget(budget);
             response.setGuestList(event.getGuestList());
             String message =getInvoice(response).toString();
-//            senderService.sendSimpleEmail("bharathhareesh2002@gmail.com","Invoice",message);
+            senderService.sendSimpleEmail("bharathhareesh2002@gmail.com","Invoice",message);
             return response;
         }
         else{
