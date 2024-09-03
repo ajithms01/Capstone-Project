@@ -40,10 +40,7 @@ public class EmployeeController {
         return ResponseEntity.ok().body(eventService.approveEvent(eventId));
     }
 
-    @PutMapping("/approveVendor")
-    public ResponseEntity<Employee> approveVendor(Long employeeId) {
-        return ResponseEntity.ok().body(employeeService.approveVendor(employeeId));
-    }
+
 
     @GetMapping("/invoice/{eventId}")
     public ResponseEntity<FullResponse> sendOrder(@RequestParam Long eventId) {

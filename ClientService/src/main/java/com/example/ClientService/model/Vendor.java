@@ -26,5 +26,6 @@ public class Vendor {
     private Float rate;
     @ElementCollection
     private List<Date> bookedDates;
+    private VendorStatus status=VendorStatus.PENDING;
 
 }

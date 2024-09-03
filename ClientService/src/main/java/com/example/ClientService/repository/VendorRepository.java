@@ -1,6 +1,7 @@
 package com.example.ClientService.repository;
 
 import com.example.ClientService.model.Vendor;
+import com.example.ClientService.model.VendorStatus;
 import feign.Param;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -23,4 +24,5 @@ public interface VendorRepository extends JpaRepository<Vendor,Long> {
     @Query("SELECT v FROM Vendor v WHERE v.vendorLocation = :location AND :date NOT MEMBER OF v.bookedDates")
     List<Vendor> findVendorsByLocationAndDate(String location, Date date);
 
+    List<Vendor> getVendorsByStatus(VendorStatus status);
 }

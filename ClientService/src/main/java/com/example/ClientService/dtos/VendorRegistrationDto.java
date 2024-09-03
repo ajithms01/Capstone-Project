@@ -1,5 +1,6 @@
 package com.example.ClientService.dtos;
 
+import com.example.ClientService.model.VendorStatus;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -17,5 +18,5 @@ public class VendorRegistrationDto {
     private String vendorLocation;
     private String type;
     private Float rate;
-
+    private VendorStatus status;
 }

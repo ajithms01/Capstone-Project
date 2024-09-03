@@ -1,15 +1,19 @@
 package com.example.ClientService.service;
 
+import com.example.ClientService.Exceptions.VendorNotFoundException;
+import com.example.ClientService.Exceptions.VendorServiceException;
 import com.example.ClientService.dtos.VendorRegistrationDto;
 import com.example.ClientService.model.Vendor;
+import com.example.ClientService.model.VendorStatus;
 import com.example.ClientService.repository.VendorRepository;
 import com.example.ClientService.utils.AppUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 
 import java.sql.Date;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class VendorService {
@@ -21,44 +25,124 @@ public class VendorService {
 
 
     public Vendor addVendor(VendorRegistrationDto vendorRegistrationDto) {
-        Vendor newVendor=appUtils.mapToVendor(vendorRegistrationDto);
-        return vendorRepository.save(newVendor);
+        try {
+            Vendor newVendor = appUtils.mapToVendor(vendorRegistrationDto);
+            return vendorRepository.save(newVendor);
+        } catch (DataIntegrityViolationException e) {
+            throw new VendorServiceException("Vendor data violates a unique constraint", e);
+        } catch (Exception e) {
+            throw new VendorServiceException("An unexpected error occurred while adding a vendor", e);
+        }
     }
 
     public List<Vendor> getAvailableVendor(Date date) {
-        return vendorRepository.findAvailableVendorsByDate(date);
+        try {
+            List<Vendor> availableVendors = vendorRepository.findAvailableVendorsByDate(date);
+            if (availableVendors.isEmpty()) {
+                throw new VendorNotFoundException("No vendors available on the specified date");
+            }
+            return availableVendors;
+        } catch (Exception e) {
+            throw new VendorServiceException("An unexpected error occurred while retrieving available vendors", e);
+        }
     }
 
     public List<Vendor> getVendorByType(String type) {
-        return vendorRepository.findVendorsByType(type);
+        try {
+            List<Vendor> vendors = vendorRepository.findVendorsByType(type);
+            if (vendors.isEmpty()) {
+                throw new VendorNotFoundException("No vendors found for the specified type");
+            }
+            return vendors;
+        } catch (Exception e) {
+            throw new VendorServiceException("An unexpected error occurred while retrieving vendors by type", e);
+        }
     }
 
     public List<Vendor> getVendorsByChoice(String location, Date date, String type) {
-        if(type == null){
-            return vendorRepository.findVendorsByLocationAndDate(location, date);
+        try {
+            List<Vendor> vendors;
+            if (type == null) {
+                vendors = vendorRepository.findVendorsByLocationAndDate(location, date);
+            } else {
+                vendors = vendorRepository.findVendorsByLocationAndDateAndType(location, date, type);
+            }
+            if (vendors.isEmpty()) {
+                throw new VendorNotFoundException("No vendors found matching the specified criteria");
+            }
+            return vendors;
+        } catch (Exception e) {
+            throw new VendorServiceException("An unexpected error occurred while retrieving vendors by choice", e);
         }
-        return vendorRepository.findVendorsByLocationAndDateAndType(location, date, type);
     }
 
     public List<Vendor> getAllVendors() {
-        return vendorRepository.findAll();
+        try {
+            List<Vendor> vendors = vendorRepository.findAll();
+            if (vendors.isEmpty()) {
+                throw new VendorNotFoundException("No vendors available");
+            }
+            return vendors;
+        } catch (Exception e) {
+            throw new VendorServiceException("An unexpected error occurred while retrieving all vendors", e);
+        }
     }
 
     public Vendor createVendor(Vendor vendor) {
-        return vendorRepository.save(vendor);
+        try {
+            return vendorRepository.save(vendor);
+        } catch (DataIntegrityViolationException e) {
+            throw new VendorServiceException("Vendor data violates a unique constraint", e);
+        } catch (Exception e) {
+            throw new VendorServiceException("An unexpected error occurred while creating a vendor", e);
+        }
     }
 
     public void deleteVendor(Long id) {
-        vendorRepository.deleteById(id);
+        try {
+            if (!vendorRepository.existsById(id)) {
+                throw new VendorNotFoundException("Vendor not found with the provided ID");
+            }
+            vendorRepository.deleteById(id);
+        } catch (EmptyResultDataAccessException e) {
+            throw new VendorNotFoundException("Vendor not found with the provided ID", e);
+        } catch (Exception e) {
+            throw new VendorServiceException("An unexpected error occurred while deleting the vendor", e);
+        }
     }
 
     public Vendor getVendorById(Long vendorId) {
-        return vendorRepository.findById(vendorId).orElse(null);
+        try {
+            return vendorRepository.findById(vendorId)
+                    .orElseThrow(() -> new VendorNotFoundException("Vendor not found with the provided ID"));
+        } catch (Exception e) {
+            throw new VendorServiceException("An unexpected error occurred while retrieving the vendor by ID", e);
+        }
     }
 
     public Vendor addDate(Long vendorId, Date date) {
-        Vendor vendor= vendorRepository.getById(vendorId);
-        vendor.getBookedDates().add(date);
-        return vendorRepository.save(vendor);
+        try {
+            Vendor vendor = vendorRepository.findById(vendorId)
+                    .orElseThrow(() -> new VendorNotFoundException("Vendor not found with the provided ID"));
+            vendor.getBookedDates().add(date);
+            return vendorRepository.save(vendor);
+        } catch (Exception e) {
+            throw new VendorServiceException("An unexpected error occurred while adding the date to the vendor", e);
+        }
+    }
+
+    public List<Vendor> getVendorsByStatus(VendorStatus status) {
+        return vendorRepository.getVendorsByStatus(status);
+    }
+
+    public Vendor approveVendor(Long vendorId) {
+        try {
+            Vendor vendor = vendorRepository.findById(vendorId)
+                   .orElseThrow(() -> new VendorNotFoundException("Vendor not found with the provided ID"));
+            vendor.setStatus(VendorStatus.APPROVED);
+            return vendorRepository.save(vendor);
+        } catch (Exception e) {
+            throw new VendorServiceException("An unexpected error occurred while approving the vendor", e);
+        }
     }
 }

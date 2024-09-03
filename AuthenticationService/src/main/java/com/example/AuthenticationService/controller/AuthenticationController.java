@@ -57,4 +57,5 @@ public class AuthenticationController {
     public Boolean validateId(@RequestParam("id") Long id) {
         return service.validateId(id);
     }
+
 }
