@@ -16,7 +16,6 @@ public class VendorRegistrationDto {
     private String vendorPhone;
     private String vendorLocation;
     private String type;
-    private List<String> provides;
     private Float rate;
 
 }

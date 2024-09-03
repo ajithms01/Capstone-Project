@@ -23,7 +23,6 @@ public class Vendor {
     private String vendorPhone;
     private String vendorLocation;
     private String type;
-    private List<String> provides;
     private Float rate;
     @ElementCollection
     private List<Date> bookedDates;

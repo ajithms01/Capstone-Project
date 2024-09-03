@@ -17,7 +17,8 @@ public class RouteValidator {
             "/swagger-ui",
             "/user",
             "/api/event",
-            "/user/getUser"
+            "/user/getUser",
+            "/vendor"
 
     );
 

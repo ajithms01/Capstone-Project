@@ -16,7 +16,6 @@ public class AppUtils {
                     vendorRegistrationDto.getVendorPhone(),
                     vendorRegistrationDto.getVendorLocation(),
                     vendorRegistrationDto.getType(),
-                    vendorRegistrationDto.getProvides(),
                     vendorRegistrationDto.getRate(),
                     null
             );

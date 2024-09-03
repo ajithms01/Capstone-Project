@@ -1,7 +1,11 @@
 package com.example.Management.Client;
 
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.Generated;
 import lombok.NoArgsConstructor;
 
 import java.sql.Date;
@@ -12,6 +16,8 @@ import java.util.Map;
 @NoArgsConstructor
 @AllArgsConstructor
 public class Vendor {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long vendorId;
     private String vendorName;
     private String vendorEmail;
