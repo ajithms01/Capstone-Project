@@ -10,6 +10,7 @@ import com.example.ClientService.utils.AppUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.sql.Date;
@@ -98,17 +99,9 @@ public class VendorService {
         }
     }
 
-    public void deleteVendor(Long id) {
-        try {
-            if (!vendorRepository.existsById(id)) {
-                throw new VendorNotFoundException("Vendor not found with the provided ID");
-            }
-            vendorRepository.deleteById(id);
-        } catch (EmptyResultDataAccessException e) {
-            throw new VendorNotFoundException("Vendor not found with the provided ID", e);
-        } catch (Exception e) {
-            throw new VendorServiceException("An unexpected error occurred while deleting the vendor", e);
-        }
+    public Boolean deleteVendor(Long id) {
+        vendorRepository.deleteById(id);
+        return true;
     }
 
     public Vendor getVendorById(Long vendorId) {
@@ -144,5 +137,9 @@ public class VendorService {
         } catch (Exception e) {
             throw new VendorServiceException("An unexpected error occurred while approving the vendor", e);
         }
+    }
+
+    public List<Vendor> addVendors(List<Vendor> vendors) {
+        return vendorRepository.saveAll(vendors);
     }
 }

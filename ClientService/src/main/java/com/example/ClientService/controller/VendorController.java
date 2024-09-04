@@ -3,12 +3,9 @@ package com.example.ClientService.controller;
 import com.example.ClientService.dtos.VendorRegistrationDto;
 import com.example.ClientService.model.Vendor;
 import com.example.ClientService.model.VendorStatus;
-import com.example.ClientService.model.Venue;
-import com.example.ClientService.repository.VendorRepository;
 import com.example.ClientService.service.VendorService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
-import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.expression.ParseException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -120,16 +117,9 @@ public class VendorController {
     }
 
     @DeleteMapping
-    public ResponseEntity<?> deleteVendor(@RequestParam Long id) {
-        try {
-            vendorService.deleteVendor(id);
-            return ResponseEntity.noContent().build();
-        } catch (EmptyResultDataAccessException e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Vendor not found with the provided ID");
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body("An unexpected error occurred while deleting the vendor");
-        }
+    public ResponseEntity<Boolean> deleteVendor(@RequestParam Long id) {
+
+            return ResponseEntity.ok().body(vendorService.deleteVendor(id));
     }
 
     @GetMapping("/getVendor/{vendorId}")
@@ -170,4 +160,8 @@ public class VendorController {
         return ResponseEntity.ok().body(vendorService.getVendorsByStatus(status));
     }
 
+    @PostMapping("list")
+    public ResponseEntity<List<Vendor>> addVendors(@RequestBody List<Vendor> vendors){
+        return ResponseEntity.ok().body(vendorService.addVendors(vendors));
+    }
 }
