@@ -46,4 +46,9 @@ public class VenueController {
     public ResponseEntity<Venue> addDate(@RequestParam Long venueId,@RequestParam Date date){
         return ResponseEntity.ok().body(venueService.addDate(venueId,date));
     }
+
+    @PostMapping("list")
+    public ResponseEntity<List<Venue>> addAllVenues(@RequestBody List<Venue> venues) {
+        return ResponseEntity.ok(venueService.pushVenues(venues));
+    }
 }

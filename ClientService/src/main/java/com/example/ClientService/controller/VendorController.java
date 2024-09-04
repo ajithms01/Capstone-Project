@@ -99,17 +99,10 @@ public class VendorController {
     }
 
     @GetMapping("/getVendorByChoice")
-    public ResponseEntity<?> getVendorsByChoice(@RequestParam String location, @RequestParam Date date, @RequestParam(required = false) String type) {
-        try {
+    public ResponseEntity<List<Vendor>> getVendorsByChoice(@RequestParam String location, @RequestParam Date date, @RequestParam(required = false) String type) {
             List<Vendor> vendors = vendorService.getVendorsByChoice(location, date, type);
-            if (vendors.isEmpty()) {
-                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("No vendors found matching the specified criteria");
-            }
             return ResponseEntity.ok(vendors);
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body("An unexpected error occurred while retrieving vendors by choice");
-        }
+
     }
 
     @GetMapping("/getAll")

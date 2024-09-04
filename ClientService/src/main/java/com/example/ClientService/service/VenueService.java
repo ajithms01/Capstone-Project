@@ -59,4 +59,7 @@ public class VenueService {
         }
     }
 
+    public List<Venue> pushVenues(List<Venue> venues) {
+        return venueRepository.saveAll(venues);
+    }
 }

@@ -21,6 +21,7 @@ public class Venue {
     private String venueName;
     private String location;
     private float rent;
+    private Long capacity;
     @ElementCollection
     private List<Date> bookedDates;
     private String address;
