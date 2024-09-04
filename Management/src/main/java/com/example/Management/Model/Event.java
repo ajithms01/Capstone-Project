@@ -27,8 +27,8 @@ public class Event {
     private Long venueId;
     @Transient
     private List<Guest> guestList;
-    private Boolean paymentStatus;
+    private Boolean paymentStatus = Boolean.FALSE;
     @Enumerated(EnumType.STRING)
-    private EventStatus status;
+    private EventStatus status=EventStatus.CONFIRMED;
 
 }

@@ -5,6 +5,7 @@ import com.example.Management.Model.Employee;
 import com.example.Management.Model.Event;
 import com.example.Management.Service.EmployeeService;
 import com.example.Management.Service.EventService;
+import jakarta.websocket.server.PathParam;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -41,9 +42,8 @@ public class EmployeeController {
     }
 
 
-
     @GetMapping("/invoice/{eventId}")
-    public ResponseEntity<FullResponse> sendOrder(@RequestParam Long eventId) {
+    public ResponseEntity<FullResponse> sendOrder(@PathVariable("eventId") Long eventId) {
         return ResponseEntity.ok().body(eventService.sendInvoice(eventId));
     }
 

@@ -125,12 +125,15 @@ public class EventService {
                 response.setVendorMap(vendorMap);
             }
             response.setType(event.getType());
-            response.setHost(userClient.getClient(event.getUserId()).getBody().get().getName());
+//            System.out.println(userClient.getClient(event.getUserId()).getBody().get().getName());
+
+            response.setHost(userClient.getUsername(event.getUserId()).getBody());
             if(event.getVenueId() != null){
                 Venue venue = venueClient.getVenueById(event.getVenueId()).getBody();
                 response.setAddress(venue.getAddress());
                 response.setVenue(venue.getVenueName());
                 budget+=venue.getRent();
+                response.setLocation(venue.getLocation());
             }
             response.setOrderId(orderRepository.findById(event.getId()).get().getOrderId());
             response.setBudget(budget);
@@ -158,18 +161,20 @@ public class EventService {
                 response.setAddress(venue.getAddress());
                 response.setVenue(venue.getVenueName());
                 response.setRate(vendor.getRate());
+                response.setEmail(vendor.getVendorEmail());
                 StringJoiner joiner = getStringJoiner(response, vendor);
-                senderService.sendSimpleEmail("bharathhareesh2002@gmail.com","Purchase Order",joiner.toString());
+                senderService.sendSimpleEmail(response.getEmail(), "Purchase Order",joiner.toString());
                 return response;
             }
-        else{
-            return null;
+            else{
+                return null;
             }
         }
         else{
             return null;
         }
     }
+
 
     private static StringJoiner getStringJoiner(FullResponse response, Vendor vendor) {
         StringJoiner joiner = new StringJoiner("\n");
@@ -223,9 +228,12 @@ public class EventService {
             response.setOrderId(orderRepository.findById(event.getId()).get().getOrderId());
             budget+=venue.getRent();
             response.setBudget(budget);
+            User user = userClient.getClient(event.getUserId()).getBody().get();
+            response.setHost(userClient.getUsername(user.getId()).getBody());
+            response.setEmail(user.getEmail());
             response.setGuestList(event.getGuestList());
             String message =getInvoice(response).toString();
-            senderService.sendSimpleEmail("bharathhareesh2002@gmail.com","Invoice",message);
+            senderService.sendSimpleEmail(response.getEmail(), "Invoice",message);
             return response;
         }
         else{
@@ -263,5 +271,14 @@ public class EventService {
 
     public List<Event> getEventsByClientId(Long userId) {
         return eventRepository.findAllByUserId(userId);
+    }
+
+    public Event paymentUpdate(Long eventId) {
+        Optional<Event> event = eventRepository.findById(eventId);
+        if(event.isPresent()){
+            event.get().setPaymentStatus(Boolean.TRUE);
+            return eventRepository.save(event.get());
+        }
+        return null;
     }
 }

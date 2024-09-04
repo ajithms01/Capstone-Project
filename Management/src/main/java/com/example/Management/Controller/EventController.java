@@ -61,12 +61,12 @@ public class EventController {
 
 //Display full details of an event
     @GetMapping("/{eventId}")
-    public ResponseEntity<FullResponse> eventDetails(@RequestParam Long eventId){
+    public ResponseEntity<FullResponse> eventDetails(@PathVariable Long eventId){
         return ResponseEntity.ok().body(eventService.eventDetails(eventId));
     }
 
 //    Display details of an event with information of a particular vendor To send purchase order
-    @GetMapping("/{eventId}/{vendorId}")
+    @PostMapping("/{eventId}/{vendorId}")
     public ResponseEntity<FullResponse> sendOrder(@RequestParam Long eventId, @RequestParam Long vendorId){
         return ResponseEntity.ok().body(eventService.sendOrder(eventId, vendorId));
     }
@@ -74,5 +74,10 @@ public class EventController {
     @GetMapping("/clientId")
     public ResponseEntity<List<Event>> getEventsByClientId(@RequestParam Long userId) {
         return ResponseEntity.ok().body(eventService.getEventsByClientId(userId));
+    }
+
+    @PutMapping("paymetUpdate/{eventId}")
+    public ResponseEntity<Event> paymentUpdate(@PathVariable Long eventId){
+        return ResponseEntity.ok().body(eventService.paymentUpdate(eventId));
     }
 }

@@ -35,4 +35,6 @@ public class FullResponse {
     private String orderId;
     private Map<String,Float> vendorMap;
     private Float rate;
+    private String email;
+    private String location;
 }

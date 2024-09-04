@@ -91,5 +91,10 @@ public class UserController {
         }
     }
 
+    @GetMapping("getUsername")
+    public ResponseEntity<String> getUsername(@RequestParam Long userId) {
+        return ResponseEntity.ok().body(userService.getOnlyUsername(userId));
+    }
+
 
 }

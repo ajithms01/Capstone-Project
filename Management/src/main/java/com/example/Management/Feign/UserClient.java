@@ -12,4 +12,7 @@ import java.util.Optional;
 public interface UserClient {
     @GetMapping("/getUserById")
     public ResponseEntity<Optional<User>> getClient(@RequestParam Long userId);
+
+    @GetMapping("getUsername")
+    public ResponseEntity<String> getUsername(@RequestParam Long userId);
 }

@@ -19,7 +19,8 @@ public class RouteValidator {
             "/api/event",
             "/user/getUser",
             "/vendor",
-            "/venue"
+            "/venue",
+            "/employee"
 
     );
 

@@ -39,4 +39,8 @@ public class UserService {
     public User getUserInfo(String username) {
         return userRepository.findByUsername(username);
     }
+
+    public String getOnlyUsername(Long userId) {
+        return userRepository.findUsernameById(userId);
+    }
 }
