@@ -5,8 +5,6 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.springframework.format.annotation.DateTimeFormat;
-
 import java.sql.Date;
 import java.util.List;
 
@@ -27,7 +25,7 @@ public class Event {
     private Long venueId;
     @Transient
     private List<Guest> guestList;
-    private Boolean paymentStatus = Boolean.FALSE;
+    private PaymentStatus paymentStatus = PaymentStatus.PENDING;
     @Enumerated(EnumType.STRING)
     private EventStatus status=EventStatus.CONFIRMED;
 

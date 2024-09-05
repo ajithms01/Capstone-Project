@@ -7,10 +7,7 @@ import com.example.Management.Client.Venue;
 import com.example.Management.Feign.UserClient;
 import com.example.Management.Feign.VendorClient;
 import com.example.Management.Feign.VenueClient;
-import com.example.Management.Model.Event;
-import com.example.Management.Model.EventStatus;
-import com.example.Management.Model.Guest;
-import com.example.Management.Model.Order;
+import com.example.Management.Model.*;
 import com.example.Management.Repository.EventRepository;
 import com.example.Management.Repository.OrderRepository;
 import com.example.Management.dto.EntityToDto;
@@ -276,9 +273,17 @@ public class EventService {
     public Event paymentUpdate(Long eventId) {
         Optional<Event> event = eventRepository.findById(eventId);
         if(event.isPresent()){
-            event.get().setPaymentStatus(Boolean.TRUE);
+            event.get().setPaymentStatus(PaymentStatus.PAID);
             return eventRepository.save(event.get());
         }
         return null;
+    }
+
+    public List<Event> getEventsByPaymentStatus(PaymentStatus status) {
+        return eventRepository.getEventsByPaymentStatus(status);
+    }
+
+    public List<Event> getEventsByStatus(EventStatus status) {
+        return eventRepository.getEventsByStatus(status);
     }
 }

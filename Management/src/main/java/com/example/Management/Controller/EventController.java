@@ -2,7 +2,9 @@ package com.example.Management.Controller;
 
 import com.example.Management.Client.FullResponse;
 import com.example.Management.Model.Event;
+import com.example.Management.Model.EventStatus;
 import com.example.Management.Model.Guest;
+import com.example.Management.Model.PaymentStatus;
 import com.example.Management.Service.EventService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -79,5 +81,15 @@ public class EventController {
     @PutMapping("paymetUpdate/{eventId}")
     public ResponseEntity<Event> paymentUpdate(@PathVariable Long eventId){
         return ResponseEntity.ok().body(eventService.paymentUpdate(eventId));
+    }
+
+    @GetMapping("/paymentStatus")
+    public ResponseEntity<List<Event>> getEventsByPaymentStatus(@RequestParam PaymentStatus status) {
+        return ResponseEntity.ok().body(eventService.getEventsByPaymentStatus(status));
+    }
+
+    @GetMapping("/status")
+    public ResponseEntity<List<Event>> getEventsByStatus(@RequestParam EventStatus status) {
+        return ResponseEntity.ok().body(eventService.getEventsByStatus(status));
     }
 }

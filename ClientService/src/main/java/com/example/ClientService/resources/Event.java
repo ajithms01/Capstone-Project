@@ -20,6 +20,6 @@ public class Event {
     private List<Long> vendorIds;
     private Long venueId;
     private List<Guest> guestList;
-    private Boolean paymentStatus;
+    private PaymentStatus paymentStatus;
     private EventStatus status;
 }

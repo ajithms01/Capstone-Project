@@ -3,8 +3,10 @@ package com.example.Management.Controller;
 import com.example.Management.Client.FullResponse;
 import com.example.Management.Model.Employee;
 import com.example.Management.Model.Event;
+import com.example.Management.Model.PaymentStatus;
 import com.example.Management.Service.EmployeeService;
 import com.example.Management.Service.EventService;
+import com.razorpay.Payment;
 import jakarta.websocket.server.PathParam;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -47,5 +49,8 @@ public class EmployeeController {
         return ResponseEntity.ok().body(eventService.sendInvoice(eventId));
     }
 
-
+//    @GetMapping("paymentStatus")
+//    public ResponseEntity<List<Event>> getPaymentStatus(@RequestParam PaymentStatus status) {
+//        return ResponseEntity.ok().body(eventService.getEventsByPaymentStatus(status));
+//    }
 }
