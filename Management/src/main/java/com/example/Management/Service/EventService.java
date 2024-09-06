@@ -132,6 +132,7 @@ public class EventService {
                 budget+=venue.getRent();
                 response.setLocation(venue.getLocation());
             }
+            response.setPaymentStatus(event.getPaymentStatus());
             response.setOrderId(orderRepository.findById(event.getId()).get().getOrderId());
             response.setBudget(budget);
             response.setGuestList(event.getGuestList());

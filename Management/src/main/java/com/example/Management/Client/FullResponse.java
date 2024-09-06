@@ -2,7 +2,7 @@ package com.example.Management.Client;
 
 import com.example.Management.Model.EventStatus;
 import com.example.Management.Model.Guest;
-import jakarta.persistence.Transient;
+import com.example.Management.Model.PaymentStatus;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -23,7 +23,7 @@ public class FullResponse {
     private String type;
     private String host;
     private List<Guest> guestList;
-    private Boolean paymentStatus;
+    private PaymentStatus paymentStatus;
     private EventStatus status;
     private Long userId;
     private List<Long> vendorIds;
