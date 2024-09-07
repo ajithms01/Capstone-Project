@@ -26,6 +26,11 @@ public class Vendor {
     private Float rate;
     @ElementCollection
     private List<Date> bookedDates;
+    @ElementCollection
+    @CollectionTable(name = "vendor_images", joinColumns = @JoinColumn(name = "vendor_id"))
+    @Column(name = "image_url")
+    private List<String> images;
     private VendorStatus status=VendorStatus.PENDING;
+
 
 }

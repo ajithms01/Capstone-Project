@@ -122,18 +122,9 @@ public class VendorController {
             return ResponseEntity.ok().body(vendorService.deleteVendor(id));
     }
 
-    @GetMapping("/getVendor/{vendorId}")
-    public ResponseEntity<?> getVendorById(@PathVariable Long vendorId) {
-        try {
-            Vendor vendor = vendorService.getVendorById(vendorId);
-            if (vendor == null) {
-                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Vendor not found with the provided ID");
-            }
-            return ResponseEntity.ok(vendor);
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body("An unexpected error occurred while retrieving the vendor by ID");
-        }
+    @GetMapping("/{vendorId}")
+    public ResponseEntity<Vendor> getVendorById(@PathVariable Long vendorId) {
+        return ResponseEntity.ok().body(vendorService.getVendorById(vendorId));
     }
 
     @PutMapping("/addDate")

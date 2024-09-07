@@ -18,7 +18,9 @@ public class AppUtils {
                     vendorRegistrationDto.getType(),
                     vendorRegistrationDto.getRate(),
                     null,
+                    vendorRegistrationDto.getImages(),
                     vendorRegistrationDto.getStatus()
+
             );
         }
     }

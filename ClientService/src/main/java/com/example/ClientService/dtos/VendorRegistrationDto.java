@@ -18,5 +18,6 @@ public class VendorRegistrationDto {
     private String vendorLocation;
     private String type;
     private Float rate;
+    private List<String> images;
     private VendorStatus status;
 }
