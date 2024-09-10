@@ -13,6 +13,7 @@ import com.example.Management.Repository.OrderRepository;
 import com.example.Management.dto.EntityToDto;
 import feign.Client;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -107,41 +108,83 @@ public class EventService {
     }
 
     public FullResponse eventDetails(Long eventId) {
-        Optional<Event> eventOptional= eventRepository.findById(eventId);
-        if(eventOptional.isPresent()){
-            Event event=eventOptional.get();
-            FullResponse response = EntityToDto.eventToResponse(event);
-            Float budget = (float) 0;
-            if(event.getVendorIds()!=null){
-                Map<String, Float> vendorMap = new HashMap<>();
-                for(Long vendorId: event.getVendorIds()){
-                    Vendor vendor = vendorClient.getVendorById(vendorId).getBody();
-                    vendorMap.put(vendor.getVendorName(), vendor.getRate());
-                    budget+= vendor.getRate();
-                }
-                response.setVendorMap(vendorMap);
-            }
-            response.setType(event.getType());
-//            System.out.println(userClient.getClient(event.getUserId()).getBody().get().getName());
+        Optional<Event> eventOptional = eventRepository.findById(eventId);
 
-            response.setHost(userClient.getUsername(event.getUserId()).getBody());
-            if(event.getVenueId() != null){
-                Venue venue = venueClient.getVenueById(event.getVenueId()).getBody();
-                response.setAddress(venue.getAddress());
-                response.setVenue(venue.getVenueName());
-                budget+=venue.getRent();
-                response.setLocation(venue.getLocation());
+        if (!eventOptional.isPresent()) {
+            return null; // Event not found
+        }
+
+        Event event = eventOptional.get();
+        FullResponse response = EntityToDto.eventToResponse(event);
+        Float budget = 0f;
+        Map<String, Float> vendorMap = new HashMap<>();
+
+        if (event.getVendorIds() != null) {
+            for (Long vendorId : event.getVendorIds()) {
+                try {
+                    ResponseEntity<Vendor> vendorResponse = vendorClient.getVendorById(vendorId);
+                    if (vendorResponse.getBody() != null) {
+                        Vendor vendor = vendorResponse.getBody();
+                        vendorMap.put(vendor.getVendorName(), vendor.getRate());
+                        budget += vendor.getRate();
+                    } else {
+                        // Handle case where vendor details are not found
+                    }
+                } catch (Exception e) {
+                    // Handle exceptions from vendorClient calls
+                    e.printStackTrace();
+                }
             }
-            response.setPaymentStatus(event.getPaymentStatus());
-            response.setOrderId(orderRepository.findById(event.getId()).get().getOrderId());
-            response.setBudget(budget);
-            response.setGuestList(event.getGuestList());
-            return response;
+            response.setVendorMap(vendorMap);
         }
-        else{
-            return null;
+
+        response.setType(event.getType());
+
+        try {
+            ResponseEntity<String> usernameResponse = userClient.getUsername(event.getUserId());
+            if (usernameResponse.getBody() != null) {
+                response.setHost(usernameResponse.getBody());
+            }
+        } catch (Exception e) {
+            // Handle exceptions from userClient calls
+            e.printStackTrace();
         }
+
+        if (event.getVenueId() != null) {
+            try {
+                ResponseEntity<Venue> venueResponse = venueClient.getVenueById(event.getVenueId());
+                if (venueResponse.getBody() != null) {
+                    Venue venue = venueResponse.getBody();
+                    response.setAddress(venue.getAddress());
+                    response.setVenue(venue.getVenueName());
+                    response.setLocation(venue.getLocation());
+                    budget += venue.getRent();
+                }
+            } catch (Exception e) {
+                // Handle exceptions from venueClient calls
+                e.printStackTrace();
+            }
+        }
+
+        response.setPaymentStatus(event.getPaymentStatus());
+
+        try {
+            Optional<Order> orderOptional = orderRepository.findById(event.getId());
+            if (orderOptional.isPresent()) {
+                response.setOrderId(orderOptional.get().getOrderId());
+            }
+        } catch (Exception e) {
+            // Handle exceptions from orderRepository calls
+            e.printStackTrace();
+        }
+
+        response.setGuestList(event.getGuestList());
+        response.setBudget(budget);
+
+        return response;
     }
+
+
 
     public FullResponse sendOrder(Long eventId, Long vendorId) {
         Optional<Event> eventOptional= eventRepository.findById(eventId);

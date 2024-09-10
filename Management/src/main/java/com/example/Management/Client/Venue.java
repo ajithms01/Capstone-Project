@@ -12,8 +12,6 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 public class Venue {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long venueId;
     private String venueName;
     private String location;

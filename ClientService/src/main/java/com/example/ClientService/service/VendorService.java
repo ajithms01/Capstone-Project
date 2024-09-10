@@ -72,7 +72,11 @@ public class VendorService {
                 throw new VendorNotFoundException("No vendors found matching the specified criteria");
             }
             return vendors;
+        } catch (VendorNotFoundException e) {
+            // Specific handling for no vendors found
+            throw e; // Rethrow or handle as needed
         } catch (Exception e) {
+            // General error handling
             throw new VendorServiceException("An unexpected error occurred while retrieving vendors by choice", e);
         }
     }

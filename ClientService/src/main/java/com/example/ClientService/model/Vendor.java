@@ -30,6 +30,7 @@ public class Vendor {
     @CollectionTable(name = "vendor_images", joinColumns = @JoinColumn(name = "vendor_id"))
     @Column(name = "image_url")
     private List<String> images;
+    @Enumerated(EnumType.STRING)
     private VendorStatus status=VendorStatus.PENDING;
 
 

@@ -15,14 +15,11 @@ public interface VendorRepository extends JpaRepository<Vendor,Long> {
 
     List<Vendor> findVendorsByType(String type);
 
-    @Query("SELECT v FROM Vendor v WHERE v.vendorLocation = :location AND :date NOT MEMBER OF v.bookedDates AND v.type = :type")
-//    @Query("SELECT v FROM Vendor v WHERE v.vendorLocation = :location AND :date NOT MEMBER OF v.bookedDates")
-    List<Vendor> findVendorsByLocationAndDateAndType(String location,Date date, String type);
+    @Query("SELECT v FROM Vendor v WHERE v.vendorLocation = :location AND :date NOT MEMBER OF v.bookedDates AND v.status = 'APPROVED'")
+    List<Vendor> findVendorsByLocationAndDate(@Param("location") String location, @Param("date") Date date);
 
-
-
-    @Query("SELECT v FROM Vendor v WHERE v.vendorLocation = :location AND :date NOT MEMBER OF v.bookedDates")
-    List<Vendor> findVendorsByLocationAndDate(String location, Date date);
+    @Query("SELECT v FROM Vendor v WHERE v.vendorLocation = :location AND :date NOT MEMBER OF v.bookedDates AND v.status = 'APPROVED' AND v.type = :type")
+    List<Vendor> findVendorsByLocationAndDateAndType(@Param("location") String location, @Param("date") Date date, @Param("type") String type);
 
     List<Vendor> getVendorsByStatus(VendorStatus status);
 }
