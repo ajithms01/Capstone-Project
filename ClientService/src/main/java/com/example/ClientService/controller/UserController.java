@@ -40,8 +40,8 @@ public class UserController {
 //    }
 
 
-    @PutMapping("/profile")
-    public ResponseEntity<User> updateProfile(@RequestParam Long clientId, @RequestBody User updatedClient) {
+    @PutMapping("/profile/{clientId}")
+    public ResponseEntity<User> updateProfile(@PathVariable Long clientId, @RequestBody User updatedClient) {
         try {
             User updatedProfile = userService.updateProfile(clientId, updatedClient);
             return ResponseEntity.ok(updatedProfile);
