@@ -19,5 +19,5 @@ public class VendorRegistrationDto {
     private String type;
     private Float rate;
     private List<String> images;
-    private VendorStatus status;
+    private VendorStatus status=VendorStatus.PENDING;
 }

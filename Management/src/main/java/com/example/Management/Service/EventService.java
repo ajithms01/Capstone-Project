@@ -127,6 +127,7 @@ public class EventService {
                         Vendor vendor = vendorResponse.getBody();
                         vendorMap.put(vendor.getVendorName(), vendor.getRate());
                         budget += vendor.getRate();
+                        System.out.println(budget);
                     } else {
                         // Handle case where vendor details are not found
                     }
@@ -159,6 +160,7 @@ public class EventService {
                     response.setVenue(venue.getVenueName());
                     response.setLocation(venue.getLocation());
                     budget += venue.getRent();
+                    System.out.println(budget);
                 }
             } catch (Exception e) {
                 // Handle exceptions from venueClient calls
